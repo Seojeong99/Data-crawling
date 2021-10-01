@@ -1,8 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
+import pyautogui
 import time
-import datetime
-import cv2
+import threading
 #import re
 from bs4 import BeautifulSoup
 #import pandas as pd
@@ -11,8 +11,23 @@ from bs4 import BeautifulSoup
 
 driver = webdriver.Firefox(executable_path="C:/driver/geckodriver.exe")
 driver.wait = WebDriverWait(driver, 3)
-URL1="http://www.utic.go.kr/view/map/cctvStream.jsp?cctvid=L010273&cctvname=%25EC%259A%25A9%25EC%2582%25B0%25EA%25B0%2580%25EC%25A1%25B1%25EA%25B3%25B5%25EC%259B%2590&kind=Seoul&cctvip=null&cctvch=52&id=524&cctvpasswd=null&cctvport=null&minX=126.93214900832989&minY=37.51694865289079&maxX=127.02387136440655&maxY=37.536838850082916"
+URL1="http://www.utic.go.kr/view/map/cctvStream.jsp?cctvid=L010099&cctvname=%25EC%25A2%2585%25EB%25A1%259C2%25EA%25B0%2580&kind=Seoul&cctvip=null&cctvch=52&id=122&cctvpasswd=null&cctvport=null&minX=126.96795976708209&minY=37.55907499804575&maxX=127.0188451664223&maxY=37.582412013189526"
 driver.get(URL1)
 time.sleep(5)
 
+for i in range(0,20):
+    c = str(i)
+    im1 = pyautogui.screenshot('D:/testImage/test' + c + '.jpg', region=(713,199,420,280))
+    time.sleep(1)
+
+#날짜, 년,월,일,시,분,초 시간대별로이름
+#일별로 폴더 만들어서 업데이트
+#시간마다 폴더 만들어서 업데이트
+#while 무제한으로.
+#프로그램 시작하면 폴더부터 만들어. 210930 1시부터 24시까지 폴더 만들기 각 날짜와 시간에 맞춰서 들어가기
+#밤 12시가되면 또 폴더 만들기
+#계속 캡쳐하는 쓰레드
+#계속 시간측정하고 쓰레드 정각이되면 폴더 만들기
+
+#날짜, 년,월,일,시,분,초 시간대별로 이름
 
