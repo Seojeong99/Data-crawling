@@ -1,5 +1,6 @@
 import pyautogui
 import time
+import clipboard
 
 for i in range(0,10):
     c = str(i)
