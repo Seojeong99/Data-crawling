@@ -29,3 +29,4 @@ for i in range(0,20):
                                + '-' + time.strftime('%S') + '.jpg',
                                region=(713, 199, 420, 280))
     time.sleep(1)
+
