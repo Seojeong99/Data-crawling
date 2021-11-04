@@ -1,5 +1,6 @@
 #import keras.backend.tensorflow_backend as K
 import time
+import sys
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 from PIL import Image
@@ -14,6 +15,9 @@ import matplotlib.pyplot as plt
 import os, re, glob
 import cv2
 import pickle
+from sklearn.model_selection import cross_val_predict
+from sklearn.metrics import confusion_matrix
+from sklearn.metrics import precision_score, recall_score, f1_score
 
 # 경로는 자신이 테스트해볼 파일의 경로로 바꿔주시면 됩니다!
 from tensorflow.lite.python.schema_py_generated import np
@@ -41,7 +45,7 @@ for idex, categorie in enumerate(categories):
         for filename in f:
             print(image_dir + filename)
             img = cv2.imread(image_dir + filename)
-            img = cv2.resize(img, None, fx=image_w / img.shape[1], fy=image_h / img.shape[0])
+           # img = cv2.resize(img, None, fx=image_w / img.shape[1], fy=image_h / img.shape[0])
             X.append(img / 256)
             Y.append(label)
 
@@ -97,7 +101,7 @@ model.summary()
 
 history = model.fit(
     X_train, Y_train,
-    batch_size=1, epochs=50,
+    batch_size=1, epochs=1,
     validation_data=(X_test, Y_test),
     #callbacks=[early_stopping],
     shuffle=True)
@@ -112,7 +116,7 @@ def Dataization(img_path):
     #image_w = 420
     #image_h = 280
     img = cv2.imread(img_path)
-    img = cv2.resize(img, None, fx=image_w / img.shape[1], fy=image_h / img.shape[0])
+    #img = cv2.resize(img, None, fx=image_w / img.shape[1], fy=image_h / img.shape[0])
     return (img / 256)
 
 
@@ -144,3 +148,59 @@ for i in range(len(test)):
     elif (x == 2):
         print("오토바이가 2대입니다.")
     print(predict[i])
+
+def func(x):
+    if x[0]==1:
+        return 1
+    else:
+        return 0
+totalsize = sys.getsizeof(Y_train)
+rowsize = sys.getsizeof(Y_train[0])
+rowCount = totalsize/rowsize
+y_train_0 = []
+
+for i in range(152):
+    x = func(Y_train[i])
+    y_train_0.append(x)
+
+print(y_train_0)
+#for i in range(152):
+#    print(X_train[i])
+y_train_pred = cross_val_predict(model, X_train, y_train_0, cv=3)
+cf = confusion_matrix(y_train_0, y_train_pred)
+print(cf)
+
+'''
+
+#y_train_0 = list(map(func,Y_train))
+
+#print(y_train_0)
+#pst=lambda Y_train.find(1)1의 위치 반환
+#print(Y_train[0][0])
+
+#print(Y_train[0].find('0'))
+
+#y_test_0 = (Y_test==)
+y_train_pred = cross_val_predict(model, X_train, y_train_0, cv=3)
+cf = confusion_matrix(y_train_0, y_train_pred)
+print(cf)
+'''
+'''
+#배열을 한줄한줄 읽어오면서 그 배열에 해당값이 있으면 1을 반환해서 list에 넣는다
+y_train_0 = (Y_train==list(map(lambda 1이 첫번째에 있는것:,Y_train)))
+#y_test_0 = (Y_test==)
+y_train_pred = cross_val_predict(model, X_train, y_train_0, cv=3)
+cf = confusion_matrix(y_train_0, y_train_pred)
+#앞이 맞는것 뒤가 예측값
+print(cf)
+'''
+'''
+p = precision_score(y_train_0, y_train_pred)
+print(p)
+r = recall_score(y_train_0, y_train_pred)
+print(r)
+f1 = f1_score(y_train_0, y_train_pred)
+print(f1)
+
+'''
+
