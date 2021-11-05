@@ -101,7 +101,7 @@ model.summary()
 
 history = model.fit(
     X_train, Y_train,
-    batch_size=1, epochs=1,
+    batch_size=1, epochs=50,
     validation_data=(X_test, Y_test),
     #callbacks=[early_stopping],
     shuffle=True)
@@ -137,6 +137,8 @@ model = load_model('Gersang2.h5')
 loss, acc = model.evaluate(X_test, Y_test)
 print("\nLoss: {}, Acc : {}".format(loss,acc))
 predict = model.predict(test)
+#for i in range(len(test)):
+#    print(np.argmax(predict[i]))
 
 for i in range(len(test)):
     print(name[i])
@@ -149,6 +151,7 @@ for i in range(len(test)):
         print("오토바이가 2대입니다.")
     print(predict[i])
 
+'''
 def func(x):
     if x[0]==1:
         return 1
@@ -170,6 +173,7 @@ y_train_pred = cross_val_predict(model, X_train, y_train_0, cv=3)
 cf = confusion_matrix(y_train_0, y_train_pred)
 print(cf)
 
+'''
 '''
 
 #y_train_0 = list(map(func,Y_train))
