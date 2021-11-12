@@ -1,4 +1,5 @@
 import tensorflow as tf
+from sklearn.model_selection import train_test_split
 from tensorflow import keras
 from tensorflow.keras import utils
 from tensorflow.keras import layers
@@ -8,6 +9,11 @@ from tensorflow.keras.layers import Dense, Dropout, Flatten, Conv2D, MaxPooling2
 import numpy as np
 import matplotlib.pyplot as plt
 from glob import glob
+import cv2
+from sklearn.model_selection import cross_val_predict
+from sklearn.metrics import confusion_matrix
+
+
 
 image_datas = glob('D:/trainingData/motorcycle/*/*.jpg')
 class_name=["rm_0", "rm_1", "rm_2"]
@@ -15,55 +21,57 @@ dic={"rm_0":0, "rm_1":1, "rm_2":2}
 X = []
 Y = []
 for i in image_datas:
-    image = open(i)
+    image = cv2.imread(i)
+    #image = open(i)
     image = np.array(image)
     X.append(image)
-    label = i.split('/')[3]
+    label = i.split('\\')[1]
     label = dic[label]
     Y.append(label)
 
-print(X)
-print(Y)
+X = np.array(X)
+Y = np.array(Y)
 
-'''
-(train_images, train_labels),(test_images, test_labels) = cifar_mnist.load_data()
 
-class_names = [
-    'Airplane',
-    'Car',
-    'Birds',
-    'Cat',
-    'Deer',
-    'Dog',
-    'Frog',
-    'Horse',
-    'Ship',
-    'Truck'
-]
 
-plt.figure(figsize=(10,10))
-for i in range(25):
-    plt.subplot(5,5,i+1)
-    plt.xticks([])
-    plt.yticks([])
-    plt.grid(False)
-    plt.imshow(train_images[i], cmap=plt.cm.binary)
-    plt.xlabel(train_labels[i])
-plt.show()
-'''
-'''
-batch_size = 64
-num_classes = 10
-epochs = 2
+train_images, test_images, train_labels, test_labels = train_test_split(X, Y, test_size=0.1, shuffle=True, random_state=44)
 
-train_images = train_images.astype('float32')
-train_images = train_images / 255
+print(test_labels)
 
-test_images = test_images.astype('float32')
-test_images = test_images / 255
+train_labels = train_labels[..., tf.newaxis]
+test_labels = test_labels[..., tf.newaxis]
 
-train_labels = utils.to_categorical(train_labels, num_classes)
-test_labels = utils.to_categorical(test_labels, num_classes)
+train_images.shape, train_labels.shape, test_images.shape, test_labels.shape
+
+#print(len(train_images))
+#print(len(test_images))
+len_train = len(train_labels)
+len_test = len(test_labels)
+unique, counts = np.unique(np.reshape(train_labels, (len_train,)), axis=-1, return_counts=True) #여기
+dict(zip(unique, counts))
+
+unique, counts = np.unique(np.reshape(test_labels, (len_test,)), axis=-1, return_counts=True) #여기
+dict(zip(unique, counts))
+
+N_TRAIN = train_images.shape[0]
+N_TEST = test_images.shape[0]
+
+train_images = train_images.astype(np.float32)/255
+test_images = test_images.astype(np.float32)/255
+
+train_labels = keras.utils.to_categorical(train_labels)
+test_labels = keras.utils.to_categorical(test_labels)
+
+print(train_images.shape, train_labels.shape)
+print(test_images.shape, test_labels.shape)
+
+learning_rate = 0.01
+N_EPOCHS = 10
+N_BATCH = 1
+N_CLASS = 3
+
+train_dataset = tf.data.Dataset.from_tensor_slices((train_images, train_labels)).shuffle(buffer_size=len_train).batch(N_BATCH).repeat()#여기
+test_dataset = tf.data.Dataset.from_tensor_slices((test_images, test_labels)).shuffle(buffer_size=len_test).batch(N_BATCH)
 
 model = keras.Sequential([
     Conv2D(32, kernel_size=(3, 3), padding='same',
@@ -78,77 +86,28 @@ model = keras.Sequential([
     Flatten(),
     Dense(64, activation=tf.nn.relu),
     Dropout(0.25),
-    Dense(num_classes, activation=tf.nn.softmax)
+    Dense(3, activation=tf.nn.softmax)
 
 ])
-
+model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate),
+              loss='categorical_crossentropy',
+              metrics=['accuracy'])
 model.summary()
 
-model.compile(
-    loss = 'categorical_crossentropy',
-    optimizer='adam',
-    metrics=['accuracy']
-)
+steps_per_epoch = N_TRAIN//N_BATCH
+validation_steps = N_TEST//N_BATCH
+print(steps_per_epoch, validation_steps)
 
-early_stopping = EarlyStopping(monitor='val_loss', patience=10)
+history = model.fit(train_dataset, epochs=N_EPOCHS, steps_per_epoch=steps_per_epoch,
+                    validation_data=test_dataset, validation_steps=validation_steps)
+model.save('motorcycle.h5')
+model.evaluate(test_dataset)
 
-history = model.fit(
-    train_images, train_labels,
-    epochs=epochs,
-    validation_data=(test_images, test_labels),
-    shuffle=True,
-    callbacks=[early_stopping]
-)
+#결과 눈으로 보기
+'''
+predict = model.predict(test_dataset)
+for i in range(len(test_dataset)):
+    print(test_labels[i])
+    print(np.argmax(predict[i]))
 
-loss, acc = model.evaluate(test_images, test_labels)
-print("\nLoss: {}, Acc : {}".format(loss,acc))
-
-predictions = model.predict(test_images)
-
-
-def plot_image(i, predictions_array, true_label, img):
-    predictions_array = predictions_array[i],
-    true_label = true_label[i]
-    img = img[i]
-    plt.grid(False)
-    plt.xticks([])
-    plt.yticks([])
-
-    plt.imshow(img, cmap=plt.cm.binary)
-
-    predicted_label = np.argmax(predictions_array)
-    if predicted_label == np.argmax(true_label):
-        color = 'blue'
-    else:
-        color = 'red'
-
-    #plt.xlabel(100*np.max(predictions_array))
-
-    #plt.xlabel(class_names[predicted_label])
-    #plt.xlabel(100*np.max(predictions_array),class_names[np.argmax(true_label)])
-    #plt.xlabel(class_names[np.argmax(true_label)])
-
-def plot_value_array(i, predictions_array, true_label):
-        predictions_array = predictions_array[i]
-        true_label = true_label[i]
-        plt.grid(False)
-        plt.xticks([])
-        plt.yticks([])
-        thisplot = plt.bar(range(10), predictions_array, color="#777777")
-        plt.ylim([0,1])
-        predicted_label = np.argmax(predictions_array)
-
-        thisplot[predicted_label].set_color('red')
-        thisplot[np.argmax(true_label)].set_color('blue')
-
-num_rows = 5
-num_cols = 3
-num_images = num_rows*num_cols
-plt.figure(figsize=(2*2*num_cols, 2*num_rows))
-for i in range(num_images):
-    plt.subplot(num_rows, 2*num_cols, 2*i+1)
-    plot_image(i, predictions, test_labels, test_images)
-    plt.subplot(num_rows, 2*num_cols, 2*i+2)
-    plot_value_array(i, predictions, test_labels)
-plt.show()
 '''
