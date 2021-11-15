@@ -104,10 +104,9 @@ model.save('motorcycle.h5')
 model.evaluate(test_dataset)
 
 #결과 눈으로 보기
-'''
+
 predict = model.predict(test_dataset)
 for i in range(len(test_dataset)):
     print(test_labels[i])
     print(np.argmax(predict[i]))
 
-'''
