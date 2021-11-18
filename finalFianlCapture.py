@@ -18,6 +18,7 @@ def make_folder(): #폴더 만드는 애
     work_dir = root_dir + "/" + today
     if not os.path.isdir(work_dir):
         os.mkdir(work_dir)
+
         for i in range(0,24):
             c = str(i)
             if i < 10:
