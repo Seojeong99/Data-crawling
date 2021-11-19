@@ -64,7 +64,8 @@ if __name__ == '__main__':
                                        + get_today() + '-' + time.strftime('%H')
                                        + '-' + time.strftime('%M')
                                        + '-' + time.strftime('%S') + '.jpg',
-                                       region=(242, 683, 850, 400))
+                                       #region=(242, 683, 850, 400))x=838, y=872
+                                       region=(460,644,400,230))
             # region=(816, 199, 420, 280))
             # region=(241, 115, 420, 280))
 
