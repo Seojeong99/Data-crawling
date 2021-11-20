@@ -53,7 +53,7 @@ if __name__ == '__main__':
     make_folder()
 
     timer = TimerThread()
-    # Daemon Thread로 설정하지 않음, 기본값임
+    # Daemon Thread로 설정하지 않음,  기본값임
     timer.setDaemon(False)
     # 타이머용 Thread 실행
     timer.start()
