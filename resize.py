@@ -2,10 +2,10 @@ from PIL import Image
 import os
 
 #raw_path = 'D:/trainingData/'  # 원본 이미지 경로
-raw_path='C:/Users/이서정/Desktop/0/'
+raw_path='C:/Users/이서정/Desktop/3/'
 token_list = os.listdir(raw_path)  # 원본 이미지 경로 내 폴더들 list
 #data_path = 'D:/trainingData/'  # 저장할 이미지 경로
-data_path = 'C:/Users/이서정/Desktop/0-0'
+data_path = 'C:/Users/이서정/Desktop/3-0'
 # resize 시작 --------------------
 for token in token_list:
 #원본 이미지 경로와 저장할 경로 이미지 지정
