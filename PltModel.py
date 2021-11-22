@@ -66,7 +66,7 @@ print(train_images.shape, train_labels.shape)
 print(test_images.shape, test_labels.shape)
 
 learning_rate = 0.01
-N_EPOCHS = 10
+N_EPOCHS = 1
 N_BATCH = 1
 N_CLASS = 3
 
