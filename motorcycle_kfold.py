@@ -1,6 +1,7 @@
 import tensorflow as tf
 from focal_loss import BinaryFocalLoss
 
+
 from tensorflow import keras
 from tensorflow.keras import utils
 from tensorflow.keras import layers
@@ -58,12 +59,12 @@ for i in image_datas:
 X = np.array(X)
 Y = np.array(Y)
 
-train_images, test_images, train_labels, test_labels = train_test_split(X, Y, test_size=0.1, random_state=42)
+train_images, test_images, train_labels, test_labels2 = train_test_split(X, Y, test_size=0.1, random_state=42)
 
 print(len(train_images), len(test_images))
 
 train_labels = train_labels[..., tf.newaxis]
-test_labels = test_labels[..., tf.newaxis]
+test_labels = test_labels2[..., tf.newaxis]
 
 print(train_images.shape, train_labels.shape, test_images.shape, test_labels.shape)
 
@@ -140,7 +141,7 @@ for train, val in skf.split(train_images, train_labels):
 
     # model.summary()
 
-    N_EPOCHS = 50
+    N_EPOCHS = 1
     
     history = model.fit(train_dataset, epochs=N_EPOCHS, validation_data=val_dataset, callbacks = [mc, es, reduce_lr], class_weight = dict_class_weights)
     
@@ -154,7 +155,7 @@ for train, val in skf.split(train_images, train_labels):
     
     len_test = len(test_label)
     test_dataset = tf.data.Dataset.from_tensor_slices((x_test, test_label)).shuffle(buffer_size=len_test).batch(N_BATCH)
-    
+    print(len(test_dataset))
     loss, acc = model.evaluate(test_dataset)
     fold_acc.append(acc)
     fold_loss.append(loss)
@@ -164,11 +165,26 @@ for train, val in skf.split(train_images, train_labels):
     fold_var += 1
     
     val_acc += acc
+    y_pred = []
+    predict = model.predict(test_dataset)
+    for i in range(len(test_dataset)):
+        y_pred.append(np.argmax(predict[i]))
+
+    print(y_pred)
+
+    from sklearn.metrics import classification_report, accuracy_score, precision_score, recall_score, f1_score
+
+    print(classification_report(test_label, y_pred))
+    print('정확도 : {:.2f}'.format(accuracy_score(test_label, y_pred) * 100))
+    print('정밀도 : {:.2f}'.format(precision_score(test_label, y_pred, average='weighted', zero_division=1) * 100))
+    print('재현율 : {:.2f}'.format(recall_score(test_label, y_pred, average='weighted', zero_division=1) * 100))
+    print('f1 score : {:.2f}'.format(f1_score(test_label, y_pred, average='weighted', zero_division=1) * 100))
 
 print(val_acc /5)
 
 print(fold_loss, fold_acc)
 
+'''
 def plot_graphs(history, string):
     plt.plot(history.history[string])
     plt.plot(history.history['val_'+string], '')
@@ -179,3 +195,23 @@ def plot_graphs(history, string):
     
 for history in historys:
     plot_graphs(history, 'loss')
+
+print(test_labels2)
+print(val_dataset)
+y_pred=[]
+predict = model.predict(val_dataset)
+print(len(val_dataset))
+for i in range(len(val_dataset)):
+    print(predict[i])
+    y_pred.append(np.argmax(predict[i]))#testdata가 왜 2개밖에 없을까
+
+
+print(y_pred)
+
+from sklearn.metrics import classification_report, accuracy_score, precision_score, recall_score, f1_score
+print(classification_report(test_labels2, y_pred))
+print('정확도 : {:.2f}'.format(accuracy_score(test_labels2, y_pred)*100))
+print('정밀도 : {:.2f}'.format(precision_score(test_labels2, y_pred, average='weighted', zero_division=1)*100))
+print('재현율 : {:.2f}'.format(recall_score(test_labels2, y_pred, average='weighted', zero_division=1)*100))
+print('f1 score : {:.2f}'.format(f1_score(test_labels2, y_pred, average='weighted', zero_division=1)*100))
+'''
