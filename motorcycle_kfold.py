@@ -110,7 +110,7 @@ for train, val in skf.split(train_images, train_labels):
     train_dataset = tf.data.Dataset.from_tensor_slices((x_trains, y_trains)).shuffle(buffer_size=len_train).batch(N_BATCH)#여기
     val_dataset = tf.data.Dataset.from_tensor_slices((x_vals, y_vals)).shuffle(buffer_size=len_val).batch(N_BATCH)
     
-    model = Sequential()
+    model = Sequential()#(필터수, (행, 열) relu’ : rectifier 함수, 은익층에 주로 쓰입니다.
     model.add(Conv2D(32, (3, 3), input_shape=train_images.shape[1:], padding='same'))
     model.add(Activation('relu'))
     model.add(MaxPooling2D(pool_size=(2, 2)))
