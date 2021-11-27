@@ -134,7 +134,7 @@ model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accur
 model.summary()
 
 # 파라미터
-N_EPOCHS = 50
+N_EPOCHS = 1
 
 # 모델 훈련
 history = model.fit(train_dataset, epochs=N_EPOCHS, validation_data=val_dataset, batch_size = N_BATCH, callbacks = [es, mc], class_weight=dict_class_weights)
@@ -147,7 +147,7 @@ predict = model.predict(test_dataset)
 for i in range(len(test_dataset)):
     print(test_labels[i])
     print(np.argmax(predict[i]))
-
+print(len(test_dataset))
 '''
 ########## 그림으로 loss, acc 보기 ################
 acc = history.history['accuracy']
