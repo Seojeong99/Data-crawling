@@ -17,6 +17,8 @@ import pickle
 from sklearn.model_selection import cross_val_predict
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_score, recall_score, f1_score
+from sklearn.metrics import classification_report
+
 categories = ["rm_0", "rm_1", "rm_2"]
 
 def Dataization(img_path):
@@ -39,7 +41,7 @@ for file in os.listdir(image_dir):
         test.append(Dataization(image_dir + file))
 
 test = np.array(test)
-model = load_model('Gersang2.h5')
+model = load_model('model_save/3.h5')
 #time.sleep(10)
 #loss, acc = model.evaluate(X_test, Y_test)
 #print("\nLoss: {}, Acc : {}".format(loss,acc))
