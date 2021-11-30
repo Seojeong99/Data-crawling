@@ -141,7 +141,7 @@ for train, val in skf.split(train_images, train_labels):
 
     # model.summary()
 
-    N_EPOCHS = 1
+    N_EPOCHS = 50
     
     history = model.fit(train_dataset, epochs=N_EPOCHS, validation_data=val_dataset, callbacks = [mc, es, reduce_lr], class_weight = dict_class_weights)
     
@@ -171,7 +171,7 @@ for train, val in skf.split(train_images, train_labels):
         y_pred.append(np.argmax(predict[i]))
 
     print(y_pred)
-
+'''
     from sklearn.metrics import classification_report, accuracy_score, precision_score, recall_score, f1_score
 
     print(classification_report(test_label, y_pred))
@@ -184,6 +184,7 @@ print(val_acc /5)
 
 print(fold_loss, fold_acc)
 
+'''
 '''
 def plot_graphs(history, string):
     plt.plot(history.history[string])
