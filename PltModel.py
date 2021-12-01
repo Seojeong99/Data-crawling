@@ -34,12 +34,12 @@ Y = np.array(Y)
 
 
 
-train_images, test_images, train_labels, test_labels = train_test_split(X, Y, test_size=0.1, shuffle=True, random_state=44)
+train_images, test_images, train_labels, test_label = train_test_split(X, Y, test_size=0.1, shuffle=True, random_state=44)
 
-print(test_labels)
+print(test_label)
 
 train_labels = train_labels[..., tf.newaxis]
-test_labels = test_labels[..., tf.newaxis]
+test_labels = test_label[..., tf.newaxis]
 
 train_images.shape, train_labels.shape, test_images.shape, test_labels.shape
 
@@ -103,10 +103,25 @@ history = model.fit(train_dataset, epochs=N_EPOCHS, steps_per_epoch=steps_per_ep
 model.save('motorcycle.h5')
 model.evaluate(test_dataset)
 
+'''
 #결과 눈으로 보기
-
 predict = model.predict(test_dataset)
 for i in range(len(test_dataset)):
-    print(test_labels[i])
+    print(test_label[i])
     print(np.argmax(predict[i]))
 
+'''
+y_pred=[]
+predict = model.predict(test_dataset)
+for i in range(len(test_dataset)):
+    y_pred.append(np.argmax(predict[i]))
+
+print(len(test_dataset))
+print(y_pred)
+
+from sklearn.metrics import classification_report, accuracy_score, precision_score, recall_score, f1_score
+print(classification_report(test_label, y_pred))
+print('정확도 : {:.2f}'.format(accuracy_score(test_label, y_pred)*100))
+print('정밀도 : {:.2f}'.format(precision_score(test_label, y_pred, average='weighted', zero_division=1)*100))
+print('재현율 : {:.2f}'.format(recall_score(test_label, y_pred, average='weighted', zero_division=1)*100))
+print('f1 score : {:.2f}'.format(f1_score(test_label, y_pred, average='weighted', zero_division=1)*100))
