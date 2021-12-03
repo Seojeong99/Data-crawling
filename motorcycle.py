@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
+
 ###########################
 # 이미지 읽어서 데이터 준비하기
 paths = glob.glob('D:/traingData/rm_0/*.jpg')
