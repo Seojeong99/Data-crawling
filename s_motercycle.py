@@ -43,6 +43,7 @@ for i in image_datas:
 X = np.array(X)
 Y = np.array(Y)
 
+
 train_images, etc_images, train_labels, etc_labels = train_test_split(X, Y, test_size=0.2, random_state=42)
 val_images, test_images, val_labels, test_labels = train_test_split(etc_images, etc_labels, test_size=0.5, random_state=42)
 
