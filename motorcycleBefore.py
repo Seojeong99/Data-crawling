@@ -57,6 +57,7 @@ Y = np.array(Y)
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y)
 xy = (X_train, X_test, Y_train, Y_test)
 
+
 pickle.dump(xy, open("./img_data2.npy", 'wb'), protocol=4)
 
 #np.save("./img_data.npy", xy)
