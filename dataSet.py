@@ -5,7 +5,6 @@ import time
 import threading
 #import re
 from bs4 import BeautifulSoup
-#import pandas as pd
 
 #from selenium.webdriver.common.keys import Keys
 
