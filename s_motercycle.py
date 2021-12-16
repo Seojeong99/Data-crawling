@@ -40,6 +40,7 @@ for i in image_datas:
     label = dic[label]
     Y.append(label)
 
+
 X = np.array(X)
 Y = np.array(Y)
 
