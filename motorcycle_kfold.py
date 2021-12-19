@@ -187,6 +187,7 @@ print(fold_loss, fold_acc)
 '''
 
 
+
 '''
 def plot_graphs(history, string):
     plt.plot(history.history[string])
