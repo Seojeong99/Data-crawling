@@ -59,6 +59,7 @@ N_TEST = test_images.shape[0]
 train_images = train_images.astype(np.float32)/255
 test_images = test_images.astype(np.float32)/255
 
+
 train_labels = keras.utils.to_categorical(train_labels)
 test_labels = keras.utils.to_categorical(test_labels)
 
