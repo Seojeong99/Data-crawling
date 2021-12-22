@@ -3,6 +3,7 @@ from multiprocessing import Process
 def job():
     print(1)
 
+
 def job2():
     print(2)
 
