@@ -20,6 +20,7 @@ def get_today() : #오늘 가져오는 애
 
 
 
+
 def make_folder(): #폴더 만드는 애
     root_dir = "D:/testImage"
     today = get_today()
