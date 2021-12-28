@@ -4,6 +4,7 @@ import numpy as np
 img = cv2.imread('C:/Users/이서정/OneDrive/사진/스크린샷/2021-10-04.png')  # 이미지 불러오기
 #imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # 이미지 그레이 전환
 
+
 #ret, thresh = cv2.threshold(imgray, 120, 255, 0)  # 흑과 백으로 임계(threshold) 분할
 contours, hierarchy = cv2.findContours(img, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)  # contour(외곽선)를 찾아냄.(연속된 좌표점)
 
