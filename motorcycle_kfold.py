@@ -122,7 +122,8 @@ for train, val in skf.split(train_images, train_labels):
     model.add(Conv2D(64, (3, 3)))
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.25))
-    
+
+
     model.add(Flatten())
     model.add(Dense(256))
     model.add(Activation('relu'))
