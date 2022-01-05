@@ -13,6 +13,7 @@ from bs4 import BeautifulSoup
 #from selenium.webdriver.common.keys import Keys
 
 
+
 def get_today() : #오늘 가져오는 애
     now = time.localtime()
     s ="%04d-%02d-%02d" % (now.tm_year, now.tm_mon, now.tm_mday)
